@@ -2,26 +2,21 @@
 
 namespace App\View\Components\Layout;
 
+use App\Models\Category;
 use Illuminate\Contracts\View\View;
-use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\View\Component;
 
 class CategoryBar extends Component
 {
     /**
-     * Main categories shown in the desktop bar.
+     * Main (top-level) categories shown in the desktop bar.
      *
-     * Fixed list until the categories table exists (stage 2); after that it
-     * is read from the database.
-     *
-     * @return list<array{name: string, slug: string}>
+     * @return Collection<int, Category>
      */
-    public function categories(): array
+    public function categories(): Collection
     {
-        return array_map(
-            fn (string $name) => ['name' => $name, 'slug' => Str::slug($name)],
-            ['Cables', 'Protección eléctrica', 'Mecanismos', 'Iluminación LED', 'Canalización', 'Herramientas'],
-        );
+        return Category::query()->roots()->ordered()->get(['name', 'slug']);
     }
 
     public function render(): View

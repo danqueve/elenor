@@ -1,0 +1,109 @@
+Vas a ayudarme a construir "Elenor", una tienda online (webapp) de materiales
+eléctricos y herramientas para Tucumán y el NOA (Argentina). Soy el único
+desarrollador. Trabajá por etapas: al terminar cada etapa, frená, mostrame un
+resumen de lo que hiciste y qué tengo que probar, y esperá mi OK antes de seguir.
+
+## Contexto técnico
+- Repositorio: https://github.com/danqueve/elenor (ya clonado en esta carpeta).
+- Entorno local: Windows con WAMP64, PHP 8.3, MySQL 8, Composer y Node instalados.
+- Producción futura: VPS Linux con Apache, PHP 8.3 y MySQL 8.
+- Stack: Laravel (última versión estable), Blade + Livewire + Alpine.js,
+  Tailwind CSS (vía Vite), MySQL 8, Laravel Socialite para Google.
+- Código, nombres de tablas, modelos y variables en inglés.
+  Todos los textos visibles para el usuario en español rioplatense.
+- Moneda ARS, formato $ 12.345,67. Zona horaria America/Argentina/Tucuman.
+
+## Identidad visual (configurala en Tailwind como colores propios)
+- Verde profundo #0B1F17 (header, footer, fondos oscuros)
+- Verde eléctrico #A9F43D (botón principal, precios destacados, estado activo)
+- Industrial #2E3B3F (textos secundarios, bordes, íconos)
+- Neutro #E9EFED (fondo de catálogo y tarjetas)
+- Tipografía Montserrat (Bold títulos, SemiBold botones/precios, Regular texto).
+- Mobile first. En móvil: menú inferior fijo con Inicio, Catálogo,
+  Presupuestos, Pedidos y Cuenta. Un solo botón verde eléctrico por pantalla.
+
+## Reglas que no se negocian
+- Precio, stock y totales se calculan SIEMPRE en el servidor; el navegador
+  solo manda IDs de producto y cantidades.
+- order_items guarda nombre y precio del producto congelados al momento de
+  la compra.
+- Al confirmar un pedido, el descuento de stock va dentro de una transacción
+  con bloqueo de filas, para no vender la última unidad dos veces.
+- El login con Google valida el token del lado del servidor (Socialite).
+- Nada de credenciales en el código: todo en .env, y .env.example actualizado.
+- CSRF en todos los formularios, validación con Form Requests.
+
+## ETAPA 1 — Base del proyecto
+1. Crear el proyecto Laravel en esta carpeta, configurar .env para MySQL local
+   (base "elenor"), zona horaria, locale "es" y moneda.
+2. Instalar y configurar Livewire, Tailwind (con los colores de arriba),
+   Alpine y la fuente Montserrat.
+3. Layout principal: header con logo (placeholder), buscador, accesos a
+   Ingresar / Favoritos / Carrito con contador; barra de categorías en
+   desktop y menú inferior en móvil; footer con datos de contacto.
+4. Crear un README.md con cómo levantar el proyecto en WAMP (virtual host
+   elenor.test) y un CLAUDE.md con el contexto y las reglas de este prompt.
+5. Primer commit con un mensaje claro.
+
+## ETAPA 2 — Modelo de datos (fase 1)
+Migraciones, modelos Eloquent con relaciones, factories y seeders para:
+- users: google_id, email, name, avatar, phone, account_type
+  (final | professional | company), professional_status
+  (none | pending | approved | rejected), role (customer | admin | sales | warehouse)
+- addresses (user_id, street, number, city, province, postal_code, reference)
+- fiscal_data (user_id, business_name, cuit, iva_condition)
+- categories (parent_id, name, slug, image, sort_order) — árbol
+- brands (name, logo)
+- products (sku, manufacturer_code, name, slug, description, category_id,
+  brand_id, unit: u|m|rollo, list_price, professional_price, stock, is_active)
+- product_images (product_id, path, sort_order)
+- product_attributes (product_id, name, value) — alimentan los filtros
+- carts y cart_items (user_id o session_id, product_id, quantity)
+- orders (number, user_id, status, shipping_method, shipping_cost,
+  payment_method, payment_status, subtotal, total, notes, address snapshot)
+- order_items (order_id, product_id, product_name, unit_price, quantity, subtotal)
+- order_status_history (order_id, status, user_id, created_at)
+Estados de pedido: received, confirmed, preparing, shipped,
+ready_for_pickup, delivered, cancelled (con etiquetas en español).
+Seeder con las categorías: Cables, Protección eléctrica, Mecanismos,
+Iluminación LED, Canalización, Herramientas, y ~40 productos de ejemplo
+realistas con atributos (sección en mm², amperaje, color, largo).
+
+## ETAPA 3 — Login con Google
+- Socialite con Google: rutas /auth/google/redirect y /auth/google/callback.
+- Crear o recuperar el usuario por google_id/email.
+- Al loguearse, fusionar el carrito de invitado (session_id) con el del usuario.
+- Si es la primera vez, pedir teléfono antes del checkout.
+- Decime exactamente qué tengo que configurar en Google Cloud Console
+  (pantalla de consentimiento, credenciales OAuth, URI de redirección
+  para elenor.test y para producción).
+
+## ETAPA 4 — Catálogo
+- Inicio: banner, categorías principales con imagen, ofertas y novedades.
+- Listado por categoría con filtros por marca, precio y atributos, orden
+  y paginación (Livewire, sin recargar).
+- Buscador con autocompletado por nombre, marca, SKU y código de fabricante.
+- Ficha de producto: galería, ficha técnica, stock, productos relacionados,
+  botón "Consultar por WhatsApp" con el producto ya escrito en el mensaje.
+
+## ETAPA 5 — Carrito y checkout
+- Carrito persistente (invitado por sesión, usuario en base).
+- Cantidades por unidad o por metro según product.unit.
+- Checkout en 3 pasos: entrega (envío o retiro), pago (transferencia,
+  efectivo al retirar; dejar preparado el lugar para Mercado Pago),
+  confirmación. El login con Google se pide recién al confirmar.
+- Generar número de pedido, guardar historial de estado, enviar email.
+- "Mis pedidos": listado, detalle con línea de tiempo de estados y
+  botón "Repetir pedido".
+
+## ETAPA 6 — Panel administrativo
+- Rutas /admin protegidas por rol.
+- Dashboard (pedidos del día por estado, sin stock), ABM de productos con
+  fotos, categorías y marcas, gestión de pedidos con cambio de estado
+  (dispara aviso al cliente), listado de clientes, aprobación de cuentas
+  profesionales.
+- Importación masiva de precios y stock desde CSV/Excel por SKU con vista
+  previa de cambios antes de aplicar.
+
+Empezá por la ETAPA 1. Antes de escribir código, mostrame en pocas líneas
+el plan de la etapa y la estructura de carpetas que vas a usar.

@@ -45,8 +45,8 @@
             {{-- On mobile the account entry is the "Cuenta" tab of the bottom menu. --}}
             <div class="hidden lg:block">
                 @auth
-                    <x-layout.header-link :href="route('account')" :label="str(auth()->user()->name)->before(' ')->toString()">
-                        <x-heroicon-o-user class="size-6" />
+                    <x-layout.header-link :href="route('account')" :label="auth()->user()->firstName()">
+                        <x-user-avatar :user="auth()->user()" class="size-7" />
                     </x-layout.header-link>
                 @else
                     <x-layout.header-link :href="route('login')" label="Ingresar">

@@ -2,11 +2,17 @@
 
 namespace Tests\Feature;
 
+use App\Models\Category;
+use Database\Seeders\CategorySeeder;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class LayoutTest extends TestCase
 {
+    // The category bar reads the categories from the database.
+    use RefreshDatabase;
+
     /**
      * @return array<string, array{string}>
      */
@@ -20,7 +26,6 @@ class LayoutTest extends TestCase
             'favorites' => ['/favoritos'],
             'cart' => ['/carrito'],
             'orders' => ['/pedidos'],
-            'account' => ['/cuenta'],
             'login' => ['/ingresar'],
         ];
     }
@@ -33,6 +38,11 @@ class LayoutTest extends TestCase
             ->assertSee('lang="es"', false)
             ->assertSee('Saltar al contenido')
             ->assertSee('role="search"', false);
+    }
+
+    public function test_the_account_is_only_for_signed_in_customers(): void
+    {
+        $this->get('/cuenta')->assertRedirect(route('login'));
     }
 
     public function test_the_header_has_login_favorites_and_cart(): void
@@ -50,20 +60,34 @@ class LayoutTest extends TestCase
             ->assertSee('value="cable 2,5"', false);
     }
 
-    public function test_the_category_bar_lists_the_main_categories(): void
+    public function test_the_category_bar_lists_the_main_categories_in_order(): void
     {
-        $this->get('/')->assertSeeInOrder([
-            'Cables',
-            'Protección eléctrica',
-            'Mecanismos',
-            'Iluminación LED',
-            'Canalización',
-            'Herramientas',
-        ]);
+        $this->seed(CategorySeeder::class);
+
+        $this->get('/')
+            ->assertSeeInOrder([
+                'Cables',
+                'Protección eléctrica',
+                'Mecanismos',
+                'Iluminación LED',
+                'Canalización',
+                'Herramientas',
+            ])
+            ->assertDontSee('Unipolares');
+    }
+
+    public function test_the_category_bar_follows_the_categories_in_the_database(): void
+    {
+        Category::factory()->create(['name' => 'Ferretería eléctrica', 'slug' => 'ferreteria-electrica', 'sort_order' => 2]);
+        Category::factory()->create(['name' => 'Cables de cobre', 'slug' => 'cables-de-cobre', 'sort_order' => 1]);
+
+        $this->get('/')->assertSeeInOrder(['Cables de cobre', 'Ferretería eléctrica']);
     }
 
     public function test_the_category_bar_highlights_the_selected_category(): void
     {
+        $this->seed(CategorySeeder::class);
+
         $this->get('/catalogo?categoria=cables')
             ->assertSee('href="'.route('catalog.index', ['categoria' => 'cables']).'"', false)
             ->assertSee('aria-current="page"', false);

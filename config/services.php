@@ -35,4 +35,12 @@ return [
         ],
     ],
 
+    // Sign in with Google (Laravel Socialite). The redirect URI must be exactly
+    // one of the "authorized redirect URIs" of the OAuth client in Google Cloud.
+    'google' => [
+        'client_id' => env('GOOGLE_CLIENT_ID'),
+        'client_secret' => env('GOOGLE_CLIENT_SECRET'),
+        'redirect' => env('GOOGLE_REDIRECT_URI'),
+    ],
+
 ];

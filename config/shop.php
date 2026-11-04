@@ -39,4 +39,17 @@ return [
         'hours' => env('SHOP_HOURS'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Administrator
+    |--------------------------------------------------------------------------
+    |
+    | Google account email of whoever administers the shop. The user seeder
+    | creates that account with the admin role, and it is linked to the Google
+    | login the first time the person signs in.
+    |
+    */
+
+    'admin_email' => env('SHOP_ADMIN_EMAIL', 'admin@elenor.test'),
+
 ];

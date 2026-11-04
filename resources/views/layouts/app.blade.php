@@ -32,6 +32,8 @@
     <x-layout.category-bar />
 
     <main id="contenido" class="flex-1">
+        <x-flash />
+
         {{ $slot }}
     </main>
 

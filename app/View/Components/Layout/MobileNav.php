@@ -20,7 +20,7 @@ class MobileNav extends Component
             $this->item('Catálogo', 'catalog.index', 'squares-2x2', ['catalog.*', 'search']),
             $this->item('Presupuestos', 'quotes.index', 'document-text', 'quotes.*'),
             $this->item('Pedidos', 'orders.index', 'shopping-bag', 'orders.*'),
-            $this->item('Cuenta', Auth::check() ? 'account' : 'login', 'user', ['account', 'login']),
+            $this->item('Cuenta', Auth::check() ? 'account' : 'login', 'user', ['account', 'account.*', 'login']),
         ];
     }
 
