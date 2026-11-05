@@ -123,13 +123,13 @@ El MySQL de WAMP viene con `default_storage_engine=MYISAM` y `sql_mode` vacío. 
 
 ```text
 app/
-├─ Enums/                       estados, roles, unidades… (con etiquetas en español)
+├─ Enums/                       estados, roles, unidades, orden del catálogo… (con etiquetas en español)
 ├─ Exceptions/                  GoogleLoginException (rechazos del login, con mensaje para el cliente)
-├─ Http/                        controladores (Auth, Account), middleware y Form Requests
-├─ Livewire/                    componentes Livewire (clase + vista)
+├─ Http/                        controladores (Auth, Account, Home, Product), middleware y Form Requests
+├─ Livewire/                    componentes Livewire (clase + vista): Catalog/ProductList, SearchBox, CartCounter
 ├─ Models/                      modelos Eloquent
-├─ Services/                    GoogleUserResolver (crear/recuperar usuario) y CartService
-├─ Support/                     Money, Cuit y helpers (money())
+├─ Services/                    GoogleUserResolver, CartService y Catalog/ (consultas, filtros y navegación)
+├─ Support/                     Money, Cuit, Quantity, ImageUrl, PriceDisplay, WhatsApp y helpers (money())
 └─ View/Components/Layout/      componentes de layout con lógica (barra de categorías, menú móvil)
 config/shop.php                 moneda ARS, datos de contacto y email del admin
 database/
@@ -143,11 +143,14 @@ resources/
 ├─ js/app.js                    arranque de Livewire (que arranca Alpine)
 └─ views/
    ├─ layouts/app.blade.php     layout principal: <x-layouts::app>
-   ├─ components/layout/        header, footer, menú móvil, barra de categorías, logo
-   ├─ components/button.blade.php
-   └─ livewire/                 vistas de los componentes Livewire
+   ├─ home.blade.php            inicio
+   ├─ products/show.blade.php   ficha de producto
+   ├─ components/               layout/ (header, footer, menú móvil, barra de categorías, logo), button,
+   │                            product-card, category-card, product-gallery, breadcrumb
+   ├─ livewire/                 vistas de los componentes Livewire (catalog/product-list, search-box…)
+   └─ vendor/livewire/          paginación con el estilo de la marca
 routes/web.php                  URLs en español, nombres de ruta en inglés
-tests/                          Unit y Feature (contra MySQL)
+tests/                          Unit y Feature (contra MySQL); Concerns/ tiene helpers para leer el HTML
 ```
 
 ## Login con Google
@@ -217,6 +220,26 @@ Mientras la app esté en estado **Testing** (*Público* → estado de publicaci�
   php artisan tinker --execute="App\Models\User::where('email', 'persona@gmail.com')->firstOrFail()->forceFill(['role' => App\Enums\UserRole::Admin])->save();"
   ```
 
+## Catálogo
+
+| URL | Qué es | Ruta |
+| --- | --- | --- |
+| `/` | Inicio: banner, categorías principales, ofertas y novedades | `home` |
+| `/catalogo` | Todo el catálogo | `catalog.index` |
+| `/categoria/{slug}` | Una categoría (incluye todo lo que cuelga de ella) | `categories.show` |
+| `/ofertas` | Solo los productos en oferta | `offers.index` |
+| `/buscar?q=…` | Resultados de una búsqueda | `search` |
+| `/producto/{slug}` | Ficha de producto | `products.show` |
+
+Los listados son un solo componente Livewire (`Catalog\ProductList`): filtran por marca, precio y atributos, ordenan y paginan **sin recargar la página**. Todo el estado queda en la URL (`?marca[0]=11&attr[Color][0]=Celeste&min=1000&orden=menor-precio&page=2`), así que cualquier listado se puede compartir. Lo que llega del navegador se limpia antes de tocar una consulta (`ProductFilters::clean*`).
+
+- **Buscador** (arriba, en todas las páginas): es un formulario GET común, anda aunque falle el JavaScript; Livewire le agrega las sugerencias mientras se escribe (desde 2 letras). Busca por nombre, marca, SKU y código de fabricante, sin importar mayúsculas ni tildes, y cada palabra tiene que aparecer en alguno de esos campos (`2.5` se entiende como `2,5`). Sirve con las flechas, Enter y Escape.
+- **Filtros**: los conteos de cada grupo ignoran la selección de ese mismo grupo (marcando "Rojo" seguís viendo cuántos hay de los otros colores). El filtro de precio se escribe en pesos enteros (`1.500`). En el celular se abren en un panel a pantalla completa. Un atributo se ofrece como filtro cuando, dentro de la categoría o la búsqueda, tiene al menos dos valores distintos; los grupos no aparecen ni desaparecen mientras filtrás.
+- **Ofertas**: un producto está en oferta cuando `compare_at_price` (el precio anterior) es **mayor** que `list_price`; el porcentaje de descuento se calcula. Los clientes profesionales aprobados ven su precio profesional en lugar de la oferta.
+- **Ficha de producto**: galería, ficha técnica (marca, SKU, código y atributos), stock en la unidad del producto (`1.200 m`, `18 rollos`), productos relacionados y el botón **Consultar por WhatsApp**, que abre el chat con el producto, el SKU y el link ya escritos. El botón usa `SHOP_WHATSAPP` del `.env`; sin número, no se muestra. Hasta la Etapa 5 (carrito) es el botón principal.
+- **Fotos**: van en `storage/app/public` (por ejemplo `products/cable.jpg`) y se guarda esa ruta en `product_images.path` o `categories.image`; se sirven por el enlace `public/storage` (`php artisan storage:link`; en Windows puede pedir una consola de administrador). También se acepta una URL completa. Sin foto se muestra un ícono de reemplazo.
+- **Probarlo**: `php artisan migrate:fresh --seed` carga ~44 productos con atributos, 10 ofertas y fechas de alta escalonadas, y `npm run build` (o `npm run dev`) compila los estilos.
+
 ## Modelo de datos
 
 ```mermaid
@@ -245,13 +268,14 @@ Lo que conviene saber:
 - **Los pedidos no cambian por cambios en el catálogo**: cada item guarda nombre, SKU, unidad y precio congelados, y el pedido guarda una copia de la dirección. Si un producto se borra, el pedido conserva todo.
 - **Sin contraseñas**: el acceso es solo con Google. El rol, el tipo de cuenta y la aprobación profesional nunca se asignan desde un formulario.
 - **Precio profesional**: lo decide `Product::priceFor($usuario)`, solo para cuentas profesionales o empresas aprobadas.
+- **Precio anterior** (`compare_at_price`, opcional): si es mayor que el precio de lista, el producto está en oferta (ver "Catálogo").
 
 ## Etapas
 
 - [x] **1. Base del proyecto**: Laravel, Livewire, Tailwind, layout principal
 - [x] **2. Modelo de datos**: usuarios, categorías, productos, carritos, pedidos y seeders
 - [x] **3. Login con Google**: Socialite, usuarios, carrito de invitado y teléfono
-- [ ] 4. Catálogo (inicio, listados con filtros, buscador, ficha de producto)
+- [x] **4. Catálogo**: inicio, listados con filtros, buscador con sugerencias y ficha de producto
 - [ ] 5. Carrito y checkout
 - [ ] 6. Panel administrativo e importación de precios
 

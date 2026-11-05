@@ -49,7 +49,7 @@ Colores propios en `resources/css/app.css` (`@theme`), como utilidades `bg-brand
 
 ## Entorno local (Windows + WAMP64)
 
-- Carpeta `C:\wamp64\www\elenor`, sitio en `http://elenor.test` (virtual host, ver README). También sirve `php artisan serve --port=8000`.
+- Carpeta `C:\wamp64\www\elenor`, sitio en `http://elenor.test` (virtual host, ver README). También sirve `php artisan serve --port=8000` (si `elenor.test` no resuelve porque falta la línea del archivo hosts, usar este).
 - **El `php` del PATH es el 8.0.30.** Antes de correr `composer` o `php artisan`, en PowerShell: `$env:Path = "C:\wamp64\bin\php\php8.3.28;" + $env:Path`.
 - MySQL 8.4.7 en el 3306, usuario `root` sin contraseña (MariaDB en el 3307, no se usa). Bases `elenor` y `elenor_test`. El cliente no está en el PATH: `C:\wamp64\bin\mysql\mysql8.4.7\bin\mysql.exe`. Hay otras bases de otros proyectos en el mismo servidor: no tocarlas.
 - **El MySQL de WAMP tiene `default_storage_engine=MYISAM` y `sql_mode` vacío.** Por eso `config/database.php` fuerza `'engine' => 'InnoDB'` y modo estricto. No sacarlo: sin eso no hay transacciones ni bloqueo de filas. `DatabaseTest` lo verifica.
@@ -68,16 +68,17 @@ Colores propios en `resources/css/app.css` (`@theme`), como utilidades `bg-brand
 Tablas: `users`, `addresses`, `fiscal_data`, `categories` (árbol), `brands`, `products`, `product_images`, `product_attributes`, `carts`, `cart_items`, `orders`, `order_items`, `order_status_history`. El diagrama está en el README.
 
 - **Dinero** en `decimal(12,2)`; **cantidades y stock** en `decimal(10,2)` (cable por metro). Los casts `decimal:2` devuelven **strings**: calcular con `bcmath` (`bcadd`, `bcmul`), nunca con floats.
-- **Enums** en `app/Enums` (con `label()` en español), guardados como texto y no como `ENUM` de MySQL: `OrderStatus`, `UserRole`, `AccountType`, `ProfessionalStatus`, `ProductUnit` (`u`, `m`, `rollo`), `ShippingMethod`, `PaymentMethod` (incluye `MercadoPago`, todavía no ofrecido), `PaymentStatus`, `IvaCondition`.
+- **Enums** en `app/Enums` (con `label()` en español), guardados como texto y no como `ENUM` de MySQL: `OrderStatus`, `UserRole`, `AccountType`, `ProfessionalStatus`, `ProductUnit` (`u`, `m`, `rollo`), `ShippingMethod`, `PaymentMethod` (incluye `MercadoPago`, todavía no ofrecido), `PaymentStatus`, `IvaCondition`, `CatalogSort` (orden de los listados).
 - **Restricciones `CHECK`** en MySQL: stock ≥ 0, precios ≥ 0, cantidades > 0, importes del pedido ≥ 0. MySQL no admite `CHECK` sobre columnas con FK en cascada: por eso "un carrito es de un usuario **o** de una sesión" lo controla la aplicación (Etapa 5).
 - **Claves foráneas**: al borrar un producto, `order_items.product_id` queda en `null` y el pedido conserva nombre, SKU, unidad y precio congelados. Un usuario con pedidos no se puede borrar; una categoría con hijos o con productos tampoco.
 - Sin `password`: el acceso es solo con Google. `User` solo admite asignación masiva del perfil de Google y el teléfono; `role`, `account_type` y `professional_status` se setean explícitamente, nunca desde un request.
 - **Precio profesional**: `Product::priceFor(?User)` es el único lugar que lo decide (cuenta `professional` o `company` con estado `approved`, y producto con `professional_price`). Usarlo en carrito y checkout.
+- **Ofertas**: `products.compare_at_price` (precio anterior, opcional, `CHECK` ≥ 0). Hay oferta cuando es **mayor** que `list_price` (`Product::isOnSale()`, scope `onSale()`). Para mostrar precios, las vistas usan `Product::priceDisplayFor(?User)`: precio, precio tachado, % de descuento y si es precio profesional (que **reemplaza** a la oferta). El `ProductSeeder` marca 10 productos (`OFFERS`).
 - **Modelos estrictos** fuera de producción (`Model::shouldBeStrict`): el lazy loading lanza excepción (cargar con `with()`/`load()`) y asignar un atributo que no está en `#[Fillable]` también. La ficha técnica es `Product::specs()` (no se puede llamar `attributes`).
 - `Category::descendantIds()` (CTE recursiva) devuelve la categoría y todo lo que cuelga de ella: el listado de una categoría principal tiene que incluir sus subcategorías. Los productos cuelgan solo de subcategorías.
 - Los pedidos guardan la dirección como **copia** en las columnas `shipping_*` (vacías si es retiro). El número de pedido (`orders.number`) lo genera la Etapa 5.
 - `App\Support\Cuit` valida y formatea el CUIT (se guarda con 11 dígitos, sin guiones).
-- **Factories** con estados: `User::factory()->admin()`, `->professional()`, `->pendingProfessional()`; `Product::factory()->outOfStock()->withSpecs([...])`; `Order::factory()->pickup()->withItems()`; `OrderItem::factory()->forProduct($producto)`.
+- **Factories** con estados: `User::factory()->admin()`, `->professional()`, `->pendingProfessional()`; `Product::factory()->outOfStock()->inactive()->onSale()->soldBy(ProductUnit::Meter)->withSpecs([...])->withImages(2)`; `Category::factory()->childOf($padre)`; `Order::factory()->pickup()->withItems()`; `OrderItem::factory()->forProduct($producto)`. Ojo: `Product::factory()` crea una categoría **principal** (sin padre) por producto: para probar jerarquías, pasar el `category_id` de una subcategoría.
 - **Seeders repetibles** (`updateOrCreate`, no duplican): categorías, marcas, productos (datos en `database/seeders/data/products.php`) y usuarios. El admin sale de `SHOP_ADMIN_EMAIL`; los usuarios de ejemplo solo se crean fuera de producción.
 
 ## Login con Google
@@ -92,12 +93,28 @@ Tablas: `users`, `addresses`, `fiscal_data`, `categories` (árbol), `brands`, `p
 - Mensajes de error del login: `redirect()->route('login')->withErrors(['google' => ...])`; el layout muestra avisos de una sola vez con `->with('status', ...)` (`<x-flash />`).
 - El botón de Google va en verde eléctrico (el botón primario) y sin el logo de Google, para respetar la paleta; los lineamientos de marca de Google piden otros estilos si se usa su logo.
 
+## Catálogo
+
+- Rutas (URL en español, nombre en inglés): `/` `home` (`HomeController`), `/catalogo` `catalog.index`, `/categoria/{category}` `categories.show`, `/ofertas` `offers.index` (el mismo componente con `->defaults('collection', 'ofertas')`), `/buscar` `search`, `/producto/{product}` `products.show` (`ProductController`; un producto inactivo da 404). `Category` y `Product` se resuelven por `slug` (`#[RouteKey('slug')]`).
+- **Un solo componente Livewire para todos los listados**: `App\Livewire\Catalog\ProductList` (catálogo, categoría, ofertas y búsqueda). El estado vive en la URL con `#[Url]` (`q`, `marca[]`, `attr[nombre][]`, `min`, `max`, `orden`, `page`); la categoría y la colección son `#[Locked]`. Todo lo que llega del navegador pasa por `ProductFilters::clean*()` antes de llegar a una consulta.
+- **Consultas en `App\Services\Catalog`**: `ProductCatalog` (productos, facetas de marca y de atributos, rango de precios, sugerencias del buscador), `ProductFilters` (los filtros ya limpios) y `CatalogNavigation` (categorías con conteos). Los conteos de cada faceta ignoran la selección de su propio grupo; los atributos que se ofrecen dependen solo de la categoría y la búsqueda (hace falta que tengan ≥ 2 valores distintos). Cada palabra de la búsqueda tiene que aparecer en nombre, SKU, código de fabricante o marca (sin mayúsculas ni tildes; `2.5` se entiende como `2,5`); el orden "relevancia" solo existe cuando hay búsqueda. Para filtrar, ordenar y mostrar el precio se usa `COALESCE(professional_price, list_price)` si el cliente es profesional aprobado.
+- Los listados de productos se cargan con `with('brand')->withFirstImage()` (el scope trae la primera foto en la misma consulta; sin eso los modelos estrictos explotan por lazy loading) y las tarjetas usan `Product::coverImageUrl()`.
+- Helpers: `Quantity::format()` (`1.200`, `12,5`), `ProductUnit::format()` / `priceSuffix()` (`1.200 m`, `18 rollos`; el sufijo del precio es `/ m` o `/ rollo`), `ImageUrl::for()` (URL completa, ruta que empieza con `/` o ruta del disco `public`; sin foto se muestra un ícono de reemplazo) y `WhatsApp::url($mensaje)` (número de `SHOP_WHATSAPP`; `null` si no hay).
+- El botón principal de la ficha es **Consultar por WhatsApp** hasta que exista el carrito: en la Etapa 5 pasa a ser "Agregar al carrito" y WhatsApp queda como secundario.
+- **Trampas que ya nos mordieron** (ninguna la ve un test de Livewire):
+  - Componentes Blade de clase: los métodos `public` se exponen a la vista y **pisan** los datos que pasa `render()`. Por eso los helpers de `CategoryBar` y `MobileNav` son `private`.
+  - Checkboxes: `wire:model` sobre un grupo solo funciona como lista si la propiedad ya es un array en el navegador; si no, se comporta como un tilde suelto y el filtro no llega al servidor. Los atributos (`specs.Color` no existe hasta usarlo) usan `wire:click="toggleSpec(...)"` más `x-bind:checked` contra `$wire.specs`: el navegador conserva el tildado de lo que tocó la persona y hay que resincronizarlo. Las marcas sí usan `wire:model` (`brands` es un array de primer nivel).
+  - Alpine `x-ref` dentro de lo que Livewire vuelve a dibujar se pierde: buscar con `$root.querySelectorAll`. El buscador cuenta las sugerencias con un `MutationObserver`.
+  - Las traducciones de paginación traen entidades (`&laquo;`): la vista de paginación propia las imprime con `{!! !!}`.
+- **Tests del catálogo**: `Livewire::actingAs()` y `Livewire::withQueryParams()` valen para todo el método de test (primero el invitado, y un `withQueryParams` por test). `tests/Concerns/ReadsPageHtml` (`section()`, `productNames()`) mira solo una parte de la página: el header y el footer repiten palabras como "Ofertas". Lo que depende del navegador (clics, Alpine, el morph de Livewire) hay que probarlo en el navegador: en la Etapa 4 así aparecieron los cuatro bugs de arriba.
+- Para ver el móvil: la ventana del navegador de pruebas no se achica de verdad. Abrir un iframe de 390 px del mismo origen (las media queries responden al ancho del iframe).
+
 ## Etapas
 
 1. **Base del proyecto**: hecha.
 2. **Modelo de datos**: hecha (ver "Modelo de datos").
-3. **Login con Google**: hecha, a la espera del OK (ver "Login con Google"; la guía de Google Cloud Console está en el README).
-4. **Catálogo**: inicio, listados con filtros por marca, precio y atributos (Livewire), buscador con autocompletado (nombre, marca, SKU, código de fabricante), ficha de producto con botón de WhatsApp.
+3. **Login con Google**: hecha (ver "Login con Google"; la guía de Google Cloud Console está en el README).
+4. **Catálogo**: hecha, a la espera del OK (ver "Catálogo"): inicio, listados con filtros por marca, precio y atributos (Livewire), buscador con autocompletado (nombre, marca, SKU, código de fabricante), ficha de producto con botón de WhatsApp.
 5. **Carrito y checkout**: carrito persistente, cantidades por unidad o metro, checkout en 3 pasos (login con Google recién al confirmar), número de pedido, historial, email, "Mis pedidos" con "Repetir pedido".
 6. **Panel administrativo** (`/admin` por rol): dashboard, ABM de productos/categorías/marcas, gestión de pedidos con aviso al cliente, clientes, aprobación de cuentas profesionales, importación de precios y stock por CSV/Excel con vista previa.
 
@@ -107,6 +124,6 @@ Tablas: `users`, `addresses`, `fiscal_data`, `categories` (árbol), `brands`, `p
 - **Páginas de Privacidad y Términos y condiciones**: Google las pide para publicar la app en producción (README, "Login con Google"). Todavía no existen.
 - Dominio de producción todavía sin definir: el README usa `TU-DOMINIO` en las URI de redirección.
 - El contador del carrito (`App\Livewire\CartCounter`) devuelve 0 hasta la Etapa 5.
-- **Ofertas** (inicio de la Etapa 4: "ofertas y novedades"): el modelo no tiene nada para marcar un producto en oferta (precio anterior, indicador…). Definir cómo se manejan antes de armar el inicio.
-- Los productos de ejemplo no tienen fotos (`product_images` está vacía): la Etapa 4 necesita una imagen de reemplazo.
+- **Ofertas**: se resolvieron con `compare_at_price` (ver "Modelo de datos"). Falta confirmar con el dueño de la tienda si le sirve ese criterio (precio anterior) o prefiere otro.
+- Los productos de ejemplo no tienen fotos (`product_images` está vacía): el catálogo muestra un ícono de reemplazo. La galería con fotos se probó en el navegador con imágenes temporales (ya borradas). Las fotos reales van en `storage/app/public` y piden `php artisan storage:link`.
 - El logo es un placeholder y los datos de contacto del `.env` son ficticios.

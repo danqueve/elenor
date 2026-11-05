@@ -96,6 +96,27 @@ class DatabaseSeederTest extends TestCase
         }
     }
 
+    public function test_it_puts_some_products_on_offer_with_a_believable_discount(): void
+    {
+        $offers = Product::query()->onSale()->get();
+
+        $this->assertGreaterThanOrEqual(6, $offers->count());
+        $this->assertLessThanOrEqual(12, $offers->count());
+        $this->assertSame($offers->count(), Product::query()->whereNotNull('compare_at_price')->count(), 'A previous price that is not higher than the price is not an offer.');
+
+        foreach ($offers as $product) {
+            $discount = $product->priceDisplayFor(null)->discountPercent;
+
+            $this->assertGreaterThanOrEqual(5, $discount, "{$product->sku} has a negligible discount.");
+            $this->assertLessThanOrEqual(40, $discount, "{$product->sku} has an unbelievable discount.");
+        }
+    }
+
+    public function test_the_products_were_not_all_created_on_the_same_day(): void
+    {
+        $this->assertGreaterThan(1, Product::query()->distinct()->count('created_at'), 'The "Novedades" order would mean nothing.');
+    }
+
     public function test_it_creates_the_admin_and_sample_customers(): void
     {
         $admin = User::query()->where('email', config('shop.admin_email'))->first();

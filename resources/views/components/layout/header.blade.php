@@ -13,33 +13,8 @@
             <x-layout.logo />
         </a>
 
-        {{-- Search: second row on mobile, centered on desktop. --}}
-        <form
-            action="{{ route('search') }}"
-            method="GET"
-            role="search"
-            class="order-last w-full lg:order-none lg:max-w-2xl lg:flex-1"
-        >
-            <label for="header-search" class="sr-only">Buscar productos</label>
-            <div class="relative">
-                <input
-                    id="header-search"
-                    type="search"
-                    name="q"
-                    value="{{ request('q') }}"
-                    placeholder="Buscá por nombre o código"
-                    enterkeyhint="search"
-                    class="focus-ring h-11 w-full rounded-lg bg-brand-neutral pl-4 pr-12 text-base text-brand-deep placeholder:text-brand-industrial/70 lg:text-sm"
-                >
-                <button
-                    type="submit"
-                    class="focus-ring absolute inset-y-0 right-0 grid w-11 place-items-center rounded-r-lg text-brand-industrial transition-colors hover:text-brand-deep"
-                    aria-label="Buscar"
-                >
-                    <x-heroicon-o-magnifying-glass class="size-5" />
-                </button>
-            </div>
-        </form>
+        {{-- Search with suggestions: second row on mobile, centered on desktop. --}}
+        <livewire:search-box />
 
         <nav aria-label="Accesos rápidos" class="ml-auto flex items-center gap-1">
             {{-- On mobile the account entry is the "Cuenta" tab of the bottom menu. --}}

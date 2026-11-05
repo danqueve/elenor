@@ -1,6 +1,6 @@
 @php
     $contact = config('shop.contact');
-    $whatsappUrl = $contact['whatsapp'] ? 'https://wa.me/'.preg_replace('/\D+/', '', $contact['whatsapp']) : null;
+    $whatsappUrl = App\Support\WhatsApp::url();
     $phoneUrl = $contact['phone'] ? 'tel:'.preg_replace('/[^\d+]/', '', $contact['phone']) : null;
     $linkClasses = 'focus-ring rounded transition-colors hover:text-brand-electric';
 @endphp
@@ -61,6 +61,7 @@
 
             <ul class="mt-4 space-y-3 text-sm">
                 <li><a href="{{ route('catalog.index') }}" class="{{ $linkClasses }}">Catálogo</a></li>
+                <li><a href="{{ route('offers.index') }}" class="{{ $linkClasses }}">Ofertas</a></li>
                 <li><a href="{{ route('quotes.index') }}" class="{{ $linkClasses }}">Presupuestos</a></li>
                 <li><a href="{{ route('orders.index') }}" class="{{ $linkClasses }}">Mis pedidos</a></li>
                 <li><a href="{{ route('favorites.index') }}" class="{{ $linkClasses }}">Favoritos</a></li>

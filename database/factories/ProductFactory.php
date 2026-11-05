@@ -72,6 +72,18 @@ class ProductFactory extends Factory
         return $this->state(['is_active' => false]);
     }
 
+    /**
+     * On offer: the previous price is 25% higher than the current one. It is
+     * worked out from the final price, so it does not matter whether
+     * `list_price` is given before or after this state.
+     */
+    public function onSale(): static
+    {
+        return $this->afterMaking(function (Product $product) {
+            $product->compare_at_price = bcmul($product->list_price, '1.25', 2);
+        });
+    }
+
     public function outOfStock(): static
     {
         return $this->state(['stock' => '0.00']);

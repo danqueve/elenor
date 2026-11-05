@@ -4,6 +4,9 @@ use App\Http\Controllers\Account\AccountController;
 use App\Http\Controllers\Account\PhoneController;
 use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\Auth\LogoutController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ProductController;
+use App\Livewire\Catalog\ProductList;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,10 +16,19 @@ use Illuminate\Support\Facades\Route;
 | the stage that builds it.
 */
 
-Route::view('/', 'home')->name('home');
+Route::get('/', HomeController::class)->name('home');
 
-Route::view('/catalogo', 'coming-soon', ['title' => 'Catálogo'])->name('catalog.index');
-Route::view('/buscar', 'coming-soon', ['title' => 'Búsqueda'])->name('search');
+/*
+| The catalog. One Livewire component serves every listing (the whole
+| catalog, a category, the offers and the search results).
+*/
+
+Route::get('/catalogo', ProductList::class)->name('catalog.index');
+Route::get('/categoria/{category}', ProductList::class)->name('categories.show');
+Route::get('/ofertas', ProductList::class)->defaults('collection', 'ofertas')->name('offers.index');
+Route::get('/buscar', ProductList::class)->name('search');
+Route::get('/producto/{product}', [ProductController::class, 'show'])->name('products.show');
+
 Route::view('/presupuestos', 'coming-soon', ['title' => 'Presupuestos'])->name('quotes.index');
 Route::view('/favoritos', 'coming-soon', ['title' => 'Favoritos'])->name('favorites.index');
 Route::view('/carrito', 'coming-soon', ['title' => 'Carrito'])->name('cart.index');

@@ -41,7 +41,9 @@ return [
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
-            'url' => rtrim(env('APP_URL', 'http://localhost'), '/').'/storage',
+            // Relative on purpose: photos load from whatever host the site is
+            // opened with (elenor.test, localhost:8000, the production domain).
+            'url' => '/storage',
             'visibility' => 'public',
             'throw' => false,
             'report' => false,

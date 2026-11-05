@@ -11,6 +11,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="theme-color" content="#0B1F17">
     <meta name="description" content="{{ $description }}">
+    {{ $head ?? '' }}
 
     <title>{{ $title ? $title.' | '.config('app.name') : config('app.name').' | Materiales eléctricos y herramientas' }}</title>
 

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\ImageUrl;
 use Database\Factories\ProductImageFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -18,5 +19,10 @@ class ProductImage extends Model
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
+    }
+
+    public function url(): string
+    {
+        return ImageUrl::for($this->path) ?? '';
     }
 }

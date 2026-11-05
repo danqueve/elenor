@@ -11,18 +11,19 @@ class Money
      * onto a different line than the number. This is for display only: prices
      * and totals are always calculated on the server, never from this string.
      */
-    public static function format(int|float|string|null $amount): string
+    public static function format(int|float|string|null $amount, ?int $decimals = null): string
     {
         $currency = config('shop.currency');
+        $decimals ??= $currency['decimals'];
 
-        $value = round((float) $amount, $currency['decimals']);
+        $value = round((float) $amount, $decimals);
 
         return ($value < 0 ? '-' : '')
             .$currency['symbol']
             ."\u{00A0}"
             .number_format(
                 abs($value),
-                $currency['decimals'],
+                $decimals,
                 $currency['decimal_separator'],
                 $currency['thousands_separator'],
             );

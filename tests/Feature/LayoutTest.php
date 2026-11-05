@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Category;
+use App\Models\Product;
 use Database\Seeders\CategorySeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -84,13 +85,58 @@ class LayoutTest extends TestCase
         $this->get('/')->assertSeeInOrder(['Cables de cobre', 'Ferretería eléctrica']);
     }
 
-    public function test_the_category_bar_highlights_the_selected_category(): void
+    /**
+     * The HTML of the desktop category bar only (other parts of a page can
+     * mark things as current too).
+     */
+    private function categoryBar(string $url): string
+    {
+        $html = $this->get($url)->assertOk()->getContent();
+
+        preg_match('#<nav aria-label="Categorías" class="hidden.*?</nav>#s', $html, $bar);
+
+        return $bar[0] ?? '';
+    }
+
+    public function test_the_category_bar_links_to_the_category_pages(): void
     {
         $this->seed(CategorySeeder::class);
 
-        $this->get('/catalogo?categoria=cables')
-            ->assertSee('href="'.route('catalog.index', ['categoria' => 'cables']).'"', false)
-            ->assertSee('aria-current="page"', false);
+        $this->assertStringContainsString('href="'.route('categories.show', 'cables').'"', $this->categoryBar('/'));
+    }
+
+    public function test_the_category_bar_marks_the_current_main_category(): void
+    {
+        $this->seed(CategorySeeder::class);
+        $cables = 'href="'.route('categories.show', 'cables').'"';
+
+        $this->assertMatchesRegularExpression('#'.preg_quote($cables, '#').'\s+aria-current="page"#', $this->categoryBar('/categoria/cables'));
+        $this->assertSame(1, substr_count($this->categoryBar('/categoria/cables'), 'aria-current="page"'));
+    }
+
+    public function test_a_subcategory_marks_its_main_category_in_the_bar(): void
+    {
+        $this->seed(CategorySeeder::class);
+        $cables = 'href="'.route('categories.show', 'cables').'"';
+
+        $this->assertMatchesRegularExpression('#'.preg_quote($cables, '#').'\s+aria-current="page"#', $this->categoryBar('/categoria/unipolares'));
+    }
+
+    public function test_a_product_page_marks_the_main_category_of_the_product(): void
+    {
+        $this->seed(CategorySeeder::class);
+        $product = Product::factory()->create(['category_id' => Category::query()->where('slug', 'tomacorrientes')->value('id')]);
+        $mecanismos = 'href="'.route('categories.show', 'mecanismos').'"';
+
+        $this->assertMatchesRegularExpression('#'.preg_quote($mecanismos, '#').'\s+aria-current="page"#', $this->categoryBar('/producto/'.$product->slug));
+    }
+
+    public function test_nothing_is_marked_in_the_bar_outside_a_category(): void
+    {
+        $this->seed(CategorySeeder::class);
+
+        $this->assertStringNotContainsString('aria-current', $this->categoryBar('/catalogo'));
+        $this->assertStringNotContainsString('aria-current', $this->categoryBar('/'));
     }
 
     public function test_the_mobile_menu_has_the_five_destinations_in_order(): void
