@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Carrito de Elenor en escritorio</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'Montserrat',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#2E5247;text-decoration:none}
+a:hover{color:#0B1F17}
+</style>
+</helmet>
+<div style="width:1440px;height:1100px;box-sizing:border-box;display:flex;flex-direction:column;background:#FFFFFF;overflow:hidden">
+
+  <div style="height:40px;flex:none;background:#081712;display:flex;align-items:center;justify-content:space-between;padding:0 64px;box-sizing:border-box">
+    <div style="font-size:12px;font-weight:600;color:#A8B8B0">Envíos a todo el NOA — Tucumán · Salta · Jujuy · Santiago del Estero · Catamarca</div>
+    <a href="https://wa.me/5493810000000" style="display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:700;color:#A9F43D">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5a8.5 8.5 0 0 0-7.3 12.8L3.5 20.5l4.3-1.1A8.5 8.5 0 1 0 12 3.5z"></path></svg>
+      Escribinos por WhatsApp
+    </a>
+  </div>
+
+  <div style="height:92px;flex:none;background:#0B1F17;display:flex;align-items:center;gap:40px;padding:0 64px;box-sizing:border-box">
+    <a href="Main.dc.html" aria-label="Elenor, inicio" style="display:inline-flex;align-items:center;gap:10px">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="#A9F43D" aria-hidden="true"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z"></path></svg>
+      <span style="font-size:23px;font-weight:800;color:#FFFFFF;letter-spacing:.08em">ELENOR</span>
+    </a>
+    <div style="flex:1;max-width:600px;position:relative">
+      <input type="search" aria-label="Buscar en el catálogo" placeholder="Buscá por producto, marca o SKU…" style="width:100%;height:48px;box-sizing:border-box;border:none;border-radius:12px;padding:0 56px 0 18px;font-family:'Montserrat',sans-serif;font-size:14px;color:#0B1F17;background:#FFFFFF">
+      <button type="button" aria-label="Buscar" style="position:absolute;top:4px;right:4px;width:40px;height:40px;border:none;border-radius:10px;background:#0B1F17;color:#FFFFFF;display:flex;align-items:center;justify-content:center;cursor:pointer">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>
+      </button>
+    </div>
+    <div style="margin-left:auto;display:flex;align-items:center;gap:22px">
+      <a href="#" style="display:inline-flex;align-items:center;gap:8px;color:#E9EFED;font-size:14px;font-weight:600">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8" r="3.6"></circle><path d="M5 20c1.4-3.2 4-4.8 7-4.8s5.6 1.6 7 4.8"></path></svg>
+        Ingresá
+      </a>
+      <a href="Carrito-Desktop.dc.html" aria-label="Carrito, 3 productos" style="position:relative;display:inline-flex;width:46px;height:46px;align-items:center;justify-content:center;border:1.5px solid #A9F43D;border-radius:12px;color:#A9F43D">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h2l2.2 11.2a1.5 1.5 0 0 0 1.5 1.2h7.6a1.5 1.5 0 0 0 1.5-1.2L20.5 9H7"></path><circle cx="10" cy="20.5" r="1.3"></circle><circle cx="17" cy="20.5" r="1.3"></circle></svg>
+        <span style="position:absolute;top:-7px;right:-7px;min-width:20px;height:20px;padding:0 5px;box-sizing:border-box;border-radius:10px;background:#A9F43D;color:#0B1F17;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center">3</span>
+      </a>
+    </div>
+  </div>
+
+  <div style="flex:none;background:#FFFFFF;padding:28px 64px 24px;box-sizing:border-box;display:flex;align-items:baseline;gap:14px">
+    <h1 style="margin:0;font-size:30px;font-weight:800;color:#0B1F17">Tu carrito</h1>
+    <span style="font-size:14px;font-weight:600;color:#6B7B74">3 productos</span>
+  </div>
+
+  <div style="flex:1;background:#F2F5F3;padding:28px 64px 44px;box-sizing:border-box;display:flex;gap:32px;align-items:flex-start">
+
+    <div style="flex:1;min-width:0;background:#FFFFFF;border:1px solid #E1E8E4;border-radius:16px;box-sizing:border-box">
+      <div style="display:flex;align-items:center;gap:20px;padding:22px 24px;border-bottom:1px solid #EDF2EF">
+        <div style="width:72px;height:72px;flex:none;background:#F3F6F4;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#B9C7C0">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="15" rx="2"></rect><circle cx="9" cy="10" r="1.7"></circle><path d="M4 18.5l5.5-5.5 3.5 3.5 3-3 4 4"></path></svg>
+        </div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:11px;font-weight:700;letter-spacing:.08em;color:#6B7B74">PRYSMIAN</div>
+          <div style="margin-top:3px;font-size:15px;font-weight:600;color:#0B1F17">Cable unipolar 2,5 mm² verde-amarillo</div>
+          <div style="margin-top:3px;font-size:13px;font-weight:500;color:#6B7B74">$&nbsp;1.990 / m</div>
+        </div>
+        <div style="display:flex;align-items:center;border:1.5px solid #CBD6D0;border-radius:11px;overflow:hidden">
+          <button type="button" aria-label="Restar medio metro" style="width:38px;height:42px;border:none;background:#FFFFFF;color:#2E3B3F;display:flex;align-items:center;justify-content:center;cursor:pointer">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14"></path></svg>
+          </button>
+          <input type="text" value="35 m" aria-label="Cantidad en metros" style="width:58px;height:42px;border:none;text-align:center;font-family:'Montserrat',sans-serif;font-size:14px;font-weight:700;color:#0B1F17;box-sizing:border-box">
+          <button type="button" aria-label="Sumar medio metro" style="width:38px;height:42px;border:none;background:#FFFFFF;color:#2E3B3F;display:flex;align-items:center;justify-content:center;cursor:pointer">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+          </button>
+        </div>
+        <div style="width:130px;flex:none;text-align:right;font-size:17px;font-weight:800;color:#0B1F17">$&nbsp;69.650</div>
+        <button type="button" aria-label="Quitar del carrito" style="width:40px;height:40px;flex:none;border:none;background:transparent;color:#6B7B74;display:flex;align-items:center;justify-content:center;cursor:pointer">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 7h15M9.5 7V4.5h5V7M6.5 7l1 13h9l1-13"></path></svg>
+        </button>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:20px;padding:22px 24px;border-bottom:1px solid #EDF2EF">
+        <div style="width:72px;height:72px;flex:none;background:#F3F6F4;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#B9C7C0">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="15" rx="2"></rect><circle cx="9" cy="10" r="1.7"></circle><path d="M4 18.5l5.5-5.5 3.5 3.5 3-3 4 4"></path></svg>
+        </div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:11px;font-weight:700;letter-spacing:.08em;color:#6B7B74">SCHNEIDER ELECTRIC</div>
+          <div style="margin-top:3px;font-size:15px;font-weight:600;color:#0B1F17">Disyuntor diferencial 2×40 A 30 mA</div>
+          <div style="margin-top:3px;font-size:13px;font-weight:500;color:#6B7B74">$&nbsp;38.990 / u</div>
+        </div>
+        <div style="display:flex;align-items:center;border:1.5px solid #CBD6D0;border-radius:11px;overflow:hidden">
+          <button type="button" aria-label="Restar una unidad" style="width:38px;height:42px;border:none;background:#FFFFFF;color:#2E3B3F;display:flex;align-items:center;justify-content:center;cursor:pointer">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14"></path></svg>
+          </button>
+          <input type="text" value="1" aria-label="Cantidad" style="width:58px;height:42px;border:none;text-align:center;font-family:'Montserrat',sans-serif;font-size:14px;font-weight:700;color:#0B1F17;box-sizing:border-box">
+          <button type="button" aria-label="Sumar una unidad" style="width:38px;height:42px;border:none;background:#FFFFFF;color:#2E3B3F;display:flex;align-items:center;justify-content:center;cursor:pointer">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+          </button>
+        </div>
+        <div style="width:130px;flex:none;text-align:right;font-size:17px;font-weight:800;color:#0B1F17">$&nbsp;38.990</div>
+        <button type="button" aria-label="Quitar del carrito" style="width:40px;height:40px;flex:none;border:none;background:transparent;color:#6B7B74;display:flex;align-items:center;justify-content:center;cursor:pointer">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 7h15M9.5 7V4.5h5V7M6.5 7l1 13h9l1-13"></path></svg>
+        </button>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:20px;padding:22px 24px">
+        <div style="width:72px;height:72px;flex:none;background:#F3F6F4;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#B9C7C0">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="15" rx="2"></rect><circle cx="9" cy="10" r="1.7"></circle><path d="M4 18.5l5.5-5.5 3.5 3.5 3-3 4 4"></path></svg>
+        </div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:11px;font-weight:700;letter-spacing:.08em;color:#6B7B74">GENROD</div>
+          <div style="margin-top:3px;font-size:15px;font-weight:600;color:#0B1F17">Caño corrugado 3/4" rollo × 25 m</div>
+          <div style="margin-top:3px;font-size:13px;font-weight:500;color:#6B7B74">$&nbsp;15.400 / rollo</div>
+        </div>
+        <div style="display:flex;align-items:center;border:1.5px solid #CBD6D0;border-radius:11px;overflow:hidden">
+          <button type="button" aria-label="Restar un rollo" style="width:38px;height:42px;border:none;background:#FFFFFF;color:#2E3B3F;display:flex;align-items:center;justify-content:center;cursor:pointer">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14"></path></svg>
+          </button>
+          <input type="text" value="2" aria-label="Cantidad de rollos" style="width:58px;height:42px;border:none;text-align:center;font-family:'Montserrat',sans-serif;font-size:14px;font-weight:700;color:#0B1F17;box-sizing:border-box">
+          <button type="button" aria-label="Sumar un rollo" style="width:38px;height:42px;border:none;background:#FFFFFF;color:#2E3B3F;display:flex;align-items:center;justify-content:center;cursor:pointer">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+          </button>
+        </div>
+        <div style="width:130px;flex:none;text-align:right;font-size:17px;font-weight:800;color:#0B1F17">$&nbsp;30.800</div>
+        <button type="button" aria-label="Quitar del carrito" style="width:40px;height:40px;flex:none;border:none;background:transparent;color:#6B7B74;display:flex;align-items:center;justify-content:center;cursor:pointer">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 7h15M9.5 7V4.5h5V7M6.5 7l1 13h9l1-13"></path></svg>
+        </button>
+      </div>
+    </div>
+
+    <div style="width:380px;flex:none;background:#FFFFFF;border:1px solid #E1E8E4;border-radius:16px;padding:28px;box-sizing:border-box">
+      <h2 style="margin:0;font-size:18px;font-weight:700;color:#0B1F17">Resumen</h2>
+      <div style="margin-top:18px;display:flex;justify-content:space-between;font-size:14px"><span style="color:#6B7B74;font-weight:500">Subtotal</span><span style="color:#0B1F17;font-weight:600">$&nbsp;139.440</span></div>
+      <div style="margin-top:12px;display:flex;justify-content:space-between;font-size:14px"><span style="color:#6B7B74;font-weight:500">Envío</span><span style="color:#2E3B3F;font-weight:600">Según tu región</span></div>
+      <div style="margin:18px 0;border-top:1px solid #EDF2EF"></div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:16px;font-weight:700;color:#0B1F17">Total</span><span style="font-size:24px;font-weight:800;color:#0B1F17">$&nbsp;139.440</span></div>
+      <div style="margin-top:6px;font-size:12px;color:#6B7B74;line-height:1.5">Sin el envío, que se coordina al confirmar el pedido.</div>
+      <a href="#" style="margin-top:20px;display:flex;align-items:center;justify-content:center;gap:10px;height:52px;background:#A9F43D;color:#0B1F17;font-size:15px;font-weight:700;border-radius:12px">
+        Iniciar compra
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 12h15M14 6.5l5.5 5.5L14 17.5"></path></svg>
+      </a>
+      <div style="margin-top:14px;display:flex;align-items:center;gap:10px;font-size:12.5px;color:#6B7B74">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><rect x="2.5" y="6.5" width="19" height="11" rx="2"></rect><circle cx="12" cy="12" r="2.8"></circle><path d="M6 10v4M18 10v4"></path></svg>
+        Pagás por transferencia bancaria
+      </div>
+      <div style="margin-top:16px;text-align:center">
+        <a href="Catalogo-Desktop.dc.html" style="font-size:13px;font-weight:600;color:#2E5247;text-decoration:underline">Seguir comprando</a>
+      </div>
+    </div>
+  </div>
+
+  <div style="flex:none;background:#081712;padding:30px 64px 22px;box-sizing:border-box">
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <div style="display:flex;align-items:center;gap:9px">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="#A9F43D" aria-hidden="true"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z"></path></svg>
+        <span style="font-size:17px;font-weight:800;color:#FFFFFF;letter-spacing:.08em">ELENOR</span>
+      </div>
+      <div style="display:flex;gap:24px">
+        <a href="#" style="font-size:13px;font-weight:500;color:#C9DAD1">Cómo comprar</a>
+        <a href="#" style="font-size:13px;font-weight:500;color:#C9DAD1">Envíos al NOA</a>
+        <a href="#" style="font-size:13px;font-weight:500;color:#C9DAD1">Términos y condiciones</a>
+        <a href="#" style="font-size:13px;font-weight:500;color:#C9DAD1">Privacidad</a>
+      </div>
+    </div>
+    <div style="margin-top:22px;border-top:1px solid #1C3529;padding-top:16px;display:flex;align-items:center;justify-content:space-between">
+      <div style="font-size:12px;color:#7E948B">© 2026 Elenor — San Miguel de Tucumán, Argentina</div>
+      <a href="https://wa.me/5493810000000" style="font-size:12px;font-weight:600;color:#A9F43D">WhatsApp +54 381 000-0000</a>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1100}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

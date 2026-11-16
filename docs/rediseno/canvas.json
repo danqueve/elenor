@@ -1,0 +1,148 @@
+{
+  "v": 3,
+  "attachments": {},
+  "boards": {
+    "Carrito-Desktop.dc.html": {
+      "h": 1100,
+      "is_interactive": true,
+      "title": "Carrito · Escritorio",
+      "w": 1440,
+      "x": 0,
+      "y": 7600
+    },
+    "Carrito-Mobile.dc.html": {
+      "h": 1350,
+      "is_interactive": true,
+      "title": "Carrito · Celular",
+      "w": 390,
+      "x": 1520,
+      "y": 7600
+    },
+    "Catalogo-Desktop.dc.html": {
+      "h": 1450,
+      "is_interactive": true,
+      "title": "Catálogo · Escritorio",
+      "w": 1440,
+      "x": 0,
+      "y": 2900
+    },
+    "Catalogo-Mobile.dc.html": {
+      "h": 1550,
+      "is_interactive": true,
+      "title": "Catálogo · Celular",
+      "w": 390,
+      "x": 2434,
+      "y": 2900
+    },
+    "Catalogo-Tablet.dc.html": {
+      "h": 1350,
+      "is_interactive": true,
+      "title": "Catálogo · Tablet",
+      "w": 834,
+      "x": 1520,
+      "y": 2900
+    },
+    "Home-Mobile.dc.html": {
+      "h": 2450,
+      "is_interactive": true,
+      "title": "Inicio · Celular",
+      "w": 1776,
+      "x": 2434,
+      "y": 0
+    },
+    "Home-Tablet.dc.html": {
+      "h": 2250,
+      "is_interactive": true,
+      "title": "Inicio · Tablet",
+      "w": 834,
+      "x": 1520,
+      "y": 0
+    },
+    "Main.dc.html": {
+      "h": 2200,
+      "is_interactive": true,
+      "title": "Inicio · Escritorio",
+      "w": 1440,
+      "x": 0,
+      "y": 0
+    },
+    "Producto-Desktop.dc.html": {
+      "h": 2000,
+      "is_interactive": true,
+      "title": "Producto · Escritorio",
+      "w": 1440,
+      "x": 0,
+      "y": 4900
+    },
+    "Producto-Mobile.dc.html": {
+      "h": 2250,
+      "is_interactive": true,
+      "title": "Producto · Celular",
+      "w": 390,
+      "x": 1520,
+      "y": 4900
+    }
+  },
+  "createdOnFiles": {
+    "at": "2026-11-16T12:00:00Z",
+    "v": 1
+  },
+  "designSystems": [],
+  "launch": {
+    "view": "canvas"
+  },
+  "noteOrder": [
+    "t-inicio",
+    "t-catalogo",
+    "t-producto",
+    "t-carrito"
+  ],
+  "notes": {
+    "t-carrito": {
+      "kind": "title1",
+      "maxW": 2824,
+      "text": "Carrito",
+      "w": 240,
+      "x": 0,
+      "y": 7300
+    },
+    "t-catalogo": {
+      "kind": "title1",
+      "maxW": 2824,
+      "text": "Catálogo",
+      "w": 240,
+      "x": 0,
+      "y": 2600
+    },
+    "t-inicio": {
+      "kind": "title1",
+      "maxW": 2824,
+      "text": "Inicio",
+      "w": 240,
+      "x": 0,
+      "y": -300
+    },
+    "t-producto": {
+      "kind": "title1",
+      "maxW": 2824,
+      "text": "Ficha de producto",
+      "w": 240,
+      "x": 0,
+      "y": 4600
+    }
+  },
+  "order": [
+    "Main.dc.html",
+    "Home-Tablet.dc.html",
+    "Home-Mobile.dc.html",
+    "Catalogo-Desktop.dc.html",
+    "Catalogo-Tablet.dc.html",
+    "Catalogo-Mobile.dc.html",
+    "Producto-Desktop.dc.html",
+    "Producto-Mobile.dc.html",
+    "Carrito-Desktop.dc.html",
+    "Carrito-Mobile.dc.html"
+  ],
+  "pages": [],
+  "title": "Rediseño Elenor"
+}

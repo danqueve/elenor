@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Catálogo de Elenor en tablet</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'Montserrat',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#2E5247;text-decoration:none}
+a:hover{color:#0B1F17}
+</style>
+</helmet>
+<div style="width:834px;height:1350px;box-sizing:border-box;display:flex;flex-direction:column;background:#FFFFFF;overflow:hidden">
+
+  <div style="height:80px;flex:none;background:#0B1F17;display:flex;align-items:center;gap:24px;padding:0 32px;box-sizing:border-box">
+    <a href="Home-Tablet.dc.html" aria-label="Elenor, inicio" style="display:inline-flex;align-items:center;gap:9px">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="#A9F43D" aria-hidden="true"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z"></path></svg>
+      <span style="font-size:20px;font-weight:800;color:#FFFFFF;letter-spacing:.08em">ELENOR</span>
+    </a>
+    <div style="flex:1;position:relative">
+      <input type="search" aria-label="Buscar en el catálogo" placeholder="Buscá por producto, marca o SKU…" style="width:100%;height:44px;box-sizing:border-box;border:none;border-radius:11px;padding:0 50px 0 16px;font-family:'Montserrat',sans-serif;font-size:13px;color:#0B1F17;background:#FFFFFF">
+      <button type="button" aria-label="Buscar" style="position:absolute;top:4px;right:4px;width:36px;height:36px;border:none;border-radius:9px;background:#0B1F17;color:#FFFFFF;display:flex;align-items:center;justify-content:center;cursor:pointer">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>
+      </button>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px">
+      <a href="#" aria-label="Mi cuenta" style="display:inline-flex;width:44px;height:44px;align-items:center;justify-content:center;border:1.5px solid #2E3B3F;border-radius:11px;color:#E9EFED">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8" r="3.6"></circle><path d="M5 20c1.4-3.2 4-4.8 7-4.8s5.6 1.6 7 4.8"></path></svg>
+      </a>
+      <a href="#" aria-label="Carrito, 3 productos" style="position:relative;display:inline-flex;width:44px;height:44px;align-items:center;justify-content:center;border:1.5px solid #2E3B3F;border-radius:11px;color:#E9EFED">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h2l2.2 11.2a1.5 1.5 0 0 0 1.5 1.2h7.6a1.5 1.5 0 0 0 1.5-1.2L20.5 9H7"></path><circle cx="10" cy="20.5" r="1.3"></circle><circle cx="17" cy="20.5" r="1.3"></circle></svg>
+        <span style="position:absolute;top:-6px;right:-6px;min-width:19px;height:19px;padding:0 5px;box-sizing:border-box;border-radius:10px;background:#A9F43D;color:#0B1F17;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center">3</span>
+      </a>
+    </div>
+  </div>
+
+  <nav aria-label="Categorías" style="height:52px;flex:none;background:#0E221A;border-top:1px solid #1C3529;display:flex;align-items:center;gap:20px;padding:0 32px;box-sizing:border-box">
+    <a href="Catalogo-Tablet.dc.html" style="color:#A9F43D;font-size:12.5px;font-weight:700">Cables y conductores</a>
+    <a href="Catalogo-Tablet.dc.html" style="color:#DCE7E1;font-size:12.5px;font-weight:600">Protección eléctrica</a>
+    <a href="Catalogo-Tablet.dc.html" style="color:#DCE7E1;font-size:12.5px;font-weight:600">Iluminación</a>
+    <a href="Catalogo-Tablet.dc.html" style="color:#DCE7E1;font-size:12.5px;font-weight:600">Herramientas</a>
+    <a href="Catalogo-Tablet.dc.html" style="color:#DCE7E1;font-size:12.5px;font-weight:600">Canalización</a>
+    <a href="Catalogo-Tablet.dc.html" style="margin-left:auto;display:inline-flex;align-items:center;gap:7px;color:#DCE7E1;font-size:12.5px;font-weight:600">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 10.5v-7h7l10 10-7 7z"></path><circle cx="7.6" cy="7.6" r="1.2"></circle></svg>
+      Ofertas
+    </a>
+  </nav>
+
+  <div style="flex:none;background:#FFFFFF;padding:20px 32px;box-sizing:border-box">
+    <div style="font-size:12.5px;font-weight:500;color:#6B7B74">
+      <a href="Home-Tablet.dc.html" style="color:#6B7B74">Inicio</a>
+      <span style="margin:0 6px">/</span>
+      <a href="Catalogo-Tablet.dc.html" style="color:#6B7B74">Catálogo</a>
+      <span style="margin:0 6px">/</span>
+      <span style="color:#2E3B3F;font-weight:600">Cables y conductores</span>
+    </div>
+    <div style="margin-top:8px;display:flex;align-items:baseline;gap:12px">
+      <h1 style="margin:0;font-size:26px;font-weight:800;color:#0B1F17">Cables y conductores</h1>
+      <span style="font-size:13px;font-weight:600;color:#6B7B74">126 productos</span>
+    </div>
+  </div>
+
+  <div style="flex:1;background:#F2F5F3;padding:20px 32px 36px;box-sizing:border-box">
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+      <button type="button" style="display:inline-flex;align-items:center;gap:8px;height:44px;padding:0 16px;background:#FFFFFF;color:#2E3B3F;border:1px solid #CBD6D0;border-radius:11px;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:600;cursor:pointer">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16l-6.2 7.2V18L10 16v-3.8z"></path></svg>
+        Filtros
+      </button>
+      <button type="button" style="display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 14px;background:#A9F43D;color:#0B1F17;border:none;border-radius:999px;font-family:'Montserrat',sans-serif;font-size:12.5px;font-weight:700;cursor:pointer">Prysmian
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg>
+      </button>
+      <button type="button" style="display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 14px;background:#A9F43D;color:#0B1F17;border:none;border-radius:999px;font-family:'Montserrat',sans-serif;font-size:12.5px;font-weight:700;cursor:pointer">2,5 mm²
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg>
+      </button>
+      <button type="button" style="margin-left:auto;display:inline-flex;align-items:center;gap:9px;height:44px;padding:0 14px;background:#FFFFFF;color:#2E3B3F;border:1px solid #CBD6D0;border-radius:11px;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:600;cursor:pointer">
+        Relevancia
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6.5 9.5 5.5 5.5 5.5-5.5"></path></svg>
+      </button>
+    </div>
+
+    <div style="margin-top:18px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px">
+      <a href="Producto-Mobile.dc.html" style="display:flex;flex-direction:column;background:#FFFFFF;border:1px solid #E1E8E4;border-radius:14px;overflow:hidden">
+        <span style="position:relative;height:120px;background:#F3F6F4;display:flex;align-items:center;justify-content:center;color:#B9C7C0">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="15" rx="2"></rect><circle cx="9" cy="10" r="1.7"></circle><path d="M4 18.5l5.5-5.5 3.5 3.5 3-3 4 4"></path></svg>
+        </span>
+        <span style="display:flex;flex-direction:column;padding:13px">
+          <span style="font-size:10px;font-weight:700;letter-spacing:.08em;color:#6B7B74">PRYSMIAN</span>
+          <span style="margin-top:4px;font-size:12.5px;font-weight:600;line-height:1.35;color:#0B1F17">Cable unipolar 1,5 mm² × metro</span>
+          <span style="margin-top:9px;display:flex;align-items:baseline;gap:4px"><span style="font-size:16px;font-weight:800;color:#0B1F17">$&nbsp;1.450</span><span style="font-size:11px;font-weight:600;color:#6B7B74">/ m</span></span>
+        </span>
+      </a>
+      <a href="Producto-Mobile.dc.html" style="display:flex;flex-direction:column;background:#FFFFFF;border:1px solid #E1E8E4;border-radius:14px;overflow:hidden">
+        <span style="position:relative;height:120px;background:#F3F6F4;display:flex;align-items:center;justify-content:center;color:#B9C7C0">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="15" rx="2"></rect><circle cx="9" cy="10" r="1.7"></circle><path d="M4 18.5l5.5-5.5 3.5 3.5 3-3 4 4"></path></svg>
+          <span style="position:absolute;top:10px;left:10px;background:#0B1F17;color:#A9F43D;font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:7px">-15&nbsp;%</span>
+        </span>
+        <span style="display:flex;flex-direction:column;padding:13px">
+          <span style="font-size:10px;font-weight:700;letter-spacing:.08em;color:#6B7B74">PRYSMIAN</span>
+          <span style="margin-top:4px;font-size:12.5px;font-weight:600;line-height:1.35;color:#0B1F17">Cable unipolar 2,5 mm² verde-amarillo</span>
+          <span style="margin-top:8px;font-size:11px;font-weight:600;color:#93A49C;text-decoration:line-through">$&nbsp;2.350</span>
+          <span style="margin-top:1px;display:flex;align-items:baseline;gap:4px"><span style="font-size:16px;font-weight:800;color:#0B1F17">$&nbsp;1.990</span><span style="font-size:11px;font-weight:600;color:#6B7B74">/ m</span></span>
+        </span>
+      </a>
+      <a href="Producto-Mobile.dc.html" style="display:flex;flex-direction:column;background:#FFFFFF;border:1px solid #E1E8E4;border-radius:14px;overflow:hidden">
+        <span style="position:relative;height:120px;background:#F3F6F4;display:flex;align-items:center;justify-content:center;color:#B9C7C0">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="15" rx="2"></rect><circle cx="9" cy="10" r="1.7"></circle><path d="M4 18.5l5.5-5.5 3.5 3.5 3-3 4 4"></path></svg>
+        </span>
+        <span style="display:flex;flex-direction:column;padding:13px">
+          <span style="font-size:10px;font-weight:700;letter-spacing:.08em;color:#6B7B74">TACSA</span>
+          <span style="margin-top:4px;font-size:12.5px;font-weight:600;line-height:1.35;color:#0B1F17">Cable unipolar 4 mm² × metro</span>
+          <span style="margin-top:9px;display:flex;align-items:baseline;gap:4px"><span style="font-size:16px;font-weight:800;color:#0B1F17">$&nbsp;3.280</span><span style="font-size:11px;font-weight:600;color:#6B7B74">/ m</span></span>
+        </span>
+      </a>
+      <a href="Producto-Mobile.dc.html" style="display:flex;flex-direction:column;background:#FFFFFF;border:1px solid #E1E8E4;border-radius:14px;overflow:hidden">
+        <span style="position:relative;height:120px;background:#F3F6F4;display:flex;align-items:center;justify-content:center;color:#B9C7C0">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="15" rx="2"></rect><circle cx="9" cy="10" r="1.7"></circle><path d="M4 18.5l5.5-5.5 3.5 3.5 3-3 4 4"></path></svg>
+        </span>
+        <span style="display:flex;flex-direction:column;padding:13px">
+          <span style="font-size:10px;font-weight:700;letter-spacing:.08em;color:#6B7B74">ARGENPLAS</span>
+          <span style="margin-top:4px;font-size:12.5px;font-weight:600;line-height:1.35;color:#0B1F17">Cable taller 2×1,5 mm² × metro</span>
+          <span style="margin-top:9px;display:flex;align-items:baseline;gap:4px"><span style="font-size:16px;font-weight:800;color:#0B1F17">$&nbsp;2.100</span><span style="font-size:11px;font-weight:600;color:#6B7B74">/ m</span></span>
+        </span>
+      </a>
+      <a href="Producto-Mobile.dc.html" style="display:flex;flex-direction:column;background:#FFFFFF;border:1px solid #E1E8E4;border-radius:14px;overflow:hidden">
+        <span style="position:relative;height:120px;background:#F3F6F4;display:flex;align-items:center;justify-content:center;color:#B9C7C0">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="15" rx="2"></rect><circle cx="9" cy="10" r="1.7"></circle><path d="M4 18.5l5.5-5.5 3.5 3.5 3-3 4 4"></path></svg>
+        </span>
+        <span style="display:flex;flex-direction:column;padding:13px">
+          <span style="font-size:10px;font-weight:700;letter-spacing:.08em;color:#6B7B74">CIMET</span>
+          <span style="margin-top:4px;font-size:12.5px;font-weight:600;line-height:1.35;color:#0B1F17">Cable taller 3×2,5 mm² rollo × 100 m</span>
+          <span style="margin-top:9px;display:flex;align-items:baseline;gap:4px"><span style="font-size:16px;font-weight:800;color:#0B1F17">$&nbsp;198.000</span><span style="font-size:11px;font-weight:600;color:#6B7B74">/ rollo</span></span>
+        </span>
+      </a>
+      <a href="Producto-Mobile.dc.html" style="display:flex;flex-direction:column;background:#FFFFFF;border:1px solid #E1E8E4;border-radius:14px;overflow:hidden">
+        <span style="position:relative;height:120px;background:#F3F6F4;display:flex;align-items:center;justify-content:center;color:#B9C7C0">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="15" rx="2"></rect><circle cx="9" cy="10" r="1.7"></circle><path d="M4 18.5l5.5-5.5 3.5 3.5 3-3 4 4"></path></svg>
+          <span style="position:absolute;top:10px;left:10px;background:#2E3B3F;color:#FFFFFF;font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:7px">SIN STOCK</span>
+        </span>
+        <span style="display:flex;flex-direction:column;padding:13px">
+          <span style="font-size:10px;font-weight:700;letter-spacing:.08em;color:#6B7B74">PRYSMIAN</span>
+          <span style="margin-top:4px;font-size:12.5px;font-weight:600;line-height:1.35;color:#0B1F17">Cable desnudo 16 mm² × metro</span>
+          <span style="margin-top:9px;font-size:12px;font-weight:600;color:#2E5247">Consultá por WhatsApp</span>
+        </span>
+      </a>
+    </div>
+
+    <div style="margin-top:24px;display:flex;align-items:center;justify-content:center;gap:8px">
+      <a href="Catalogo-Tablet.dc.html" aria-label="Página anterior" style="display:inline-flex;width:40px;height:40px;align-items:center;justify-content:center;border:1px solid #CBD6D0;border-radius:10px;color:#2E3B3F;background:#FFFFFF">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m14.5 6-6 6 6 6"></path></svg>
+      </a>
+      <a href="Catalogo-Tablet.dc.html" style="display:inline-flex;width:40px;height:40px;align-items:center;justify-content:center;border-radius:10px;background:#0B1F17;color:#FFFFFF;font-size:14px;font-weight:700">1</a>
+      <a href="Catalogo-Tablet.dc.html" style="display:inline-flex;width:40px;height:40px;align-items:center;justify-content:center;border:1px solid #CBD6D0;border-radius:10px;background:#FFFFFF;color:#2E3B3F;font-size:14px;font-weight:600">2</a>
+      <a href="Catalogo-Tablet.dc.html" style="display:inline-flex;width:40px;height:40px;align-items:center;justify-content:center;border:1px solid #CBD6D0;border-radius:10px;background:#FFFFFF;color:#2E3B3F;font-size:14px;font-weight:600">3</a>
+      <span style="display:inline-flex;width:40px;height:40px;align-items:center;justify-content:center;color:#6B7B74;font-size:14px;font-weight:600">…</span>
+      <a href="Catalogo-Tablet.dc.html" style="display:inline-flex;width:40px;height:40px;align-items:center;justify-content:center;border:1px solid #CBD6D0;border-radius:10px;background:#FFFFFF;color:#2E3B3F;font-size:14px;font-weight:600">8</a>
+      <a href="Catalogo-Tablet.dc.html" aria-label="Página siguiente" style="display:inline-flex;width:40px;height:40px;align-items:center;justify-content:center;border:1px solid #CBD6D0;border-radius:10px;color:#2E3B3F;background:#FFFFFF">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9.5 6 6 6-6 6"></path></svg>
+      </a>
+    </div>
+  </div>
+
+  <div style="flex:none;background:#081712;padding:26px 32px 20px;box-sizing:border-box">
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <div style="display:flex;align-items:center;gap:8px">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="#A9F43D" aria-hidden="true"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z"></path></svg>
+        <span style="font-size:15px;font-weight:800;color:#FFFFFF;letter-spacing:.08em">ELENOR</span>
+      </div>
+      <div style="display:flex;gap:18px">
+        <a href="#" style="font-size:12.5px;font-weight:500;color:#C9DAD1">Cómo comprar</a>
+        <a href="#" style="font-size:12.5px;font-weight:500;color:#C9DAD1">Envíos</a>
+        <a href="#" style="font-size:12.5px;font-weight:500;color:#C9DAD1">Términos</a>
+      </div>
+    </div>
+    <div style="margin-top:18px;border-top:1px solid #1C3529;padding-top:14px;display:flex;align-items:center;justify-content:space-between">
+      <div style="font-size:11.5px;color:#7E948B">© 2026 Elenor — Tucumán, Argentina</div>
+      <a href="https://wa.me/5493810000000" style="font-size:11.5px;font-weight:600;color:#A9F43D">WhatsApp +54 381 000-0000</a>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":834,"height":1350}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>
