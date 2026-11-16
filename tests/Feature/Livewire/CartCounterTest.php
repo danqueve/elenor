@@ -3,12 +3,15 @@
 namespace Tests\Feature\Livewire;
 
 use App\Livewire\CartCounter;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Exceptions\PublicPropertyNotFoundException;
 use Livewire\Livewire;
 use Tests\TestCase;
 
 class CartCounterTest extends TestCase
 {
+    use RefreshDatabase;
+
     public function test_it_links_to_the_cart_and_starts_empty(): void
     {
         Livewire::test(CartCounter::class)

@@ -31,7 +31,7 @@
             </dl>
 
             @if (blank($user->phone))
-                <p class="mt-2 text-sm text-brand-industrial">Lo necesitamos para coordinar la entrega o el retiro de tus pedidos.</p>
+                <p class="mt-2 text-sm text-brand-industrial">Lo necesitamos para coordinar la entrega de tus pedidos.</p>
             @endif
 
             <form method="POST" action="{{ route('logout') }}" class="mt-6">

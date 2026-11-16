@@ -100,7 +100,7 @@ Tablas: `users`, `addresses`, `fiscal_data`, `categories` (árbol), `brands`, `p
 - **Consultas en `App\Services\Catalog`**: `ProductCatalog` (productos, facetas de marca y de atributos, rango de precios, sugerencias del buscador), `ProductFilters` (los filtros ya limpios) y `CatalogNavigation` (categorías con conteos). Los conteos de cada faceta ignoran la selección de su propio grupo; los atributos que se ofrecen dependen solo de la categoría y la búsqueda (hace falta que tengan ≥ 2 valores distintos). Cada palabra de la búsqueda tiene que aparecer en nombre, SKU, código de fabricante o marca (sin mayúsculas ni tildes; `2.5` se entiende como `2,5`); el orden "relevancia" solo existe cuando hay búsqueda. Para filtrar, ordenar y mostrar el precio se usa `COALESCE(professional_price, list_price)` si el cliente es profesional aprobado.
 - Los listados de productos se cargan con `with('brand')->withFirstImage()` (el scope trae la primera foto en la misma consulta; sin eso los modelos estrictos explotan por lazy loading) y las tarjetas usan `Product::coverImageUrl()`.
 - Helpers: `Quantity::format()` (`1.200`, `12,5`), `ProductUnit::format()` / `priceSuffix()` (`1.200 m`, `18 rollos`; el sufijo del precio es `/ m` o `/ rollo`), `ImageUrl::for()` (URL completa, ruta que empieza con `/` o ruta del disco `public`; sin foto se muestra un ícono de reemplazo) y `WhatsApp::url($mensaje)` (número de `SHOP_WHATSAPP`; `null` si no hay).
-- El botón principal de la ficha es **Consultar por WhatsApp** hasta que exista el carrito: en la Etapa 5 pasa a ser "Agregar al carrito" y WhatsApp queda como secundario.
+- El botón principal de la ficha es **Agregar al carrito** (Livewire `Cart\AddToCart`) si hay stock; si no, **Consultar por WhatsApp**.
 - **Trampas que ya nos mordieron** (ninguna la ve un test de Livewire):
   - Componentes Blade de clase: los métodos `public` se exponen a la vista y **pisan** los datos que pasa `render()`. Por eso los helpers de `CategoryBar` y `MobileNav` son `private`.
   - Checkboxes: `wire:model` sobre un grupo solo funciona como lista si la propiedad ya es un array en el navegador; si no, se comporta como un tilde suelto y el filtro no llega al servidor. Los atributos (`specs.Color` no existe hasta usarlo) usan `wire:click="toggleSpec(...)"` más `x-bind:checked` contra `$wire.specs`: el navegador conserva el tildado de lo que tocó la persona y hay que resincronizarlo. Las marcas sí usan `wire:model` (`brands` es un array de primer nivel).
@@ -109,13 +109,23 @@ Tablas: `users`, `addresses`, `fiscal_data`, `categories` (árbol), `brands`, `p
 - **Tests del catálogo**: `Livewire::actingAs()` y `Livewire::withQueryParams()` valen para todo el método de test (primero el invitado, y un `withQueryParams` por test). `tests/Concerns/ReadsPageHtml` (`section()`, `productNames()`) mira solo una parte de la página: el header y el footer repiten palabras como "Ofertas". Lo que depende del navegador (clics, Alpine, el morph de Livewire) hay que probarlo en el navegador: en la Etapa 4 así aparecieron los cuatro bugs de arriba.
 - Para ver el móvil: la ventana del navegador de pruebas no se achica de verdad. Abrir un iframe de 390 px del mismo origen (las media queries responden al ancho del iframe).
 
+## Carrito y checkout
+
+- Decisiones del dueño (plan de diseño, nov. 2026): tienda **solo virtual** (sin retiro: `ShippingMethod::offered()` lo esconde salvo `SHOP_PICKUP_ENABLED`), envío **según la región** (`config/shop.php` `shipping.zones`, provincias del NOA; costo vacío = "a coordinar" y `orders.shipping_cost` en `null`, el `total` no lo incluye), formas de pago "se definen luego" (hoy solo transferencia, `PaymentMethod::offeredFor()`), factura por fuera del sistema.
+- `CartService` es el único que toca el carrito: `current()`, `add()`, `update()`, `remove()`, `count()`, `contents(?User)` (líneas con precio de `priceFor`, subtotal y `CartProblem` por línea) y `problemWith()`. Errores para el cliente: `CartException` (mensaje en español). Cantidades: `Quantity::parse()` (acepta `2,5`), `ProductUnit::step()`/`accepts()` (metro de a 0,5; unidad y rollo enteros). Cuentas: `Decimal::multiply()` (redondea a centavos) y `Decimal::sum()`.
+- Livewire: `Cart\CartPage` (`/carrito`) y `Cart\AddToCart`; avisan con el evento `cart-updated` y `CartCounter` se redibuja. **En Livewire 4 `wire:model.change` no manda nada al servidor**: para guardar al cambiar hace falta `wire:model.live.change`.
+- Checkout con controladores + Form Requests (`app/Http/Requests/Checkout`), URLs `/compra/entrega|pago|confirmar`. Los pasos se guardan en sesión (`CheckoutSession`, se revalidan al leerse). El POST de confirmar lleva `['auth', 'phone']`; al invitado, el GET de confirmar le guarda `url.intended` y le ofrece Google.
+- `OrderPlacer::place()`: transacción, carrito y productos con `lockForUpdate` (productos en orden de id), revalida con `problemWith()`, congela nombre/SKU/unidad/precio, descuenta stock, número `EL-%06d` desde el id, historial "Recibido", guarda la dirección (`firstOrCreate`), vacía el carrito y encola `OrderPlaced` (`ShouldQueue`, `afterCommit`). Si algo cambió, `CheckoutException` y vuelve al carrito.
+- Pedidos: `OrderController` + `OrderPolicy`; ver el pedido de otro da **404** (los números son correlativos). "Repetir pedido" agrega lo disponible a precios de hoy (recorta al stock, en pasos de la unidad) y lista lo que no pudo.
+- Tests: en los tests HTTP la sesión cambia de id en cada request; para un carrito de invitado, fijar la cookie (`withCookie(config('session.cookie'), $id)`). Para probar logueado en el navegador sin Google, armar a mano una sesión con `login_web_<sha1(SessionGuard::class)>` y mandar su cookie cifrada.
+
 ## Etapas
 
 1. **Base del proyecto**: hecha.
 2. **Modelo de datos**: hecha (ver "Modelo de datos").
 3. **Login con Google**: hecha (ver "Login con Google"; la guía de Google Cloud Console está en el README).
-4. **Catálogo**: hecha, a la espera del OK (ver "Catálogo"): inicio, listados con filtros por marca, precio y atributos (Livewire), buscador con autocompletado (nombre, marca, SKU, código de fabricante), ficha de producto con botón de WhatsApp.
-5. **Carrito y checkout**: carrito persistente, cantidades por unidad o metro, checkout en 3 pasos (login con Google recién al confirmar), número de pedido, historial, email, "Mis pedidos" con "Repetir pedido".
+4. **Catálogo**: hecha (ver "Catálogo"): inicio, listados con filtros por marca, precio y atributos (Livewire), buscador con autocompletado (nombre, marca, SKU, código de fabricante), ficha de producto con botón de WhatsApp.
+5. **Carrito y checkout**: hecha, a la espera del OK (ver "Carrito y checkout"): carrito persistente, cantidades por unidad o metro, checkout en 3 pasos (login con Google recién al confirmar), número de pedido, historial, email, "Mis pedidos" con "Repetir pedido".
 6. **Panel administrativo** (`/admin` por rol): dashboard, ABM de productos/categorías/marcas, gestión de pedidos con aviso al cliente, clientes, aprobación de cuentas profesionales, importación de precios y stock por CSV/Excel con vista previa.
 
 ## Pendientes y cosas a tener presentes
@@ -123,7 +133,10 @@ Tablas: `users`, `addresses`, `fiscal_data`, `categories` (árbol), `brands`, `p
 - **"Presupuestos"** (ítem del menú inferior) no está definido en ninguna etapa: hoy es una página "Próximamente". Hay que definir qué es.
 - **Páginas de Privacidad y Términos y condiciones**: Google las pide para publicar la app en producción (README, "Login con Google"). Todavía no existen.
 - Dominio de producción todavía sin definir: el README usa `TU-DOMINIO` en las URI de redirección.
-- El contador del carrito (`App\Livewire\CartCounter`) devuelve 0 hasta la Etapa 5.
+- **Costos de envío** por zona y **datos bancarios**: los del `.env.example` son de ejemplo; faltan los reales. Tampoco está definido si habrá envío gratis desde cierto monto.
+- **Mercado Pago**: previsto (`PaymentMethod::MercadoPago`), sin integrar. Cuando se haga: el pedido pasa a pagado solo por el webhook verificado.
+- **Avisos por WhatsApp** de cambio de estado (pedido en el plan): no hechos; el email se manda solo al crear el pedido (los cambios de estado los dispara el admin, Etapa 6).
+- **Botón de arrepentimiento** y términos: exigidos para venta online en Argentina, todavía no existen.
 - **Ofertas**: se resolvieron con `compare_at_price` (ver "Modelo de datos"). Falta confirmar con el dueño de la tienda si le sirve ese criterio (precio anterior) o prefiere otro.
 - Los productos de ejemplo no tienen fotos (`product_images` está vacía): el catálogo muestra un ícono de reemplazo. La galería con fotos se probó en el navegador con imágenes temporales (ya borradas). Las fotos reales van en `storage/app/public` y piden `php artisan storage:link`.
 - El logo es un placeholder y los datos de contacto del `.env` son ficticios.

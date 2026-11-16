@@ -80,7 +80,7 @@ class OrderFactory extends Factory
 
             $order->update([
                 'subtotal' => $subtotal,
-                'total' => bcadd($subtotal, $order->shipping_cost, 2),
+                'total' => bcadd($subtotal, $order->shipping_cost ?? '0.00', 2),
             ]);
         });
     }

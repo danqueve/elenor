@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\User;
 use Database\Seeders\CategorySeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -26,7 +27,6 @@ class LayoutTest extends TestCase
             'quotes' => ['/presupuestos'],
             'favorites' => ['/favoritos'],
             'cart' => ['/carrito'],
-            'orders' => ['/pedidos'],
             'login' => ['/ingresar'],
         ];
     }
@@ -44,6 +44,11 @@ class LayoutTest extends TestCase
     public function test_the_account_is_only_for_signed_in_customers(): void
     {
         $this->get('/cuenta')->assertRedirect(route('login'));
+    }
+
+    public function test_the_orders_are_only_for_signed_in_customers(): void
+    {
+        $this->get('/pedidos')->assertRedirect(route('login'));
     }
 
     public function test_the_header_has_login_favorites_and_cart(): void
@@ -153,7 +158,7 @@ class LayoutTest extends TestCase
 
     public function test_the_mobile_menu_marks_the_current_section(): void
     {
-        $this->get('/pedidos')->assertSeeInOrder([
+        $this->actingAs(User::factory()->create())->get('/pedidos')->assertSeeInOrder([
             'href="'.route('orders.index').'"',
             'aria-current="page"',
         ], false);

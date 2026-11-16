@@ -113,7 +113,10 @@ npm run dev                 # assets con recarga automática
 php artisan test            # tests (usan la base elenor_test)
 php vendor\bin\pint         # formato de código (estilo Laravel)
 php artisan migrate:fresh --seed   # borra todo y rehace la base de desarrollo con los datos de ejemplo
+php artisan queue:work      # procesa la cola: sin esto no salen los emails de pedido
 ```
+
+Los emails van a la cola (`QUEUE_CONNECTION=database`). En local, con `MAIL_MAILER=log`, aparecen en `storage/logs/laravel.log`.
 
 ## Particularidades del MySQL de WAMP
 
@@ -236,9 +239,26 @@ Los listados son un solo componente Livewire (`Catalog\ProductList`): filtran po
 - **Buscador** (arriba, en todas las páginas): es un formulario GET común, anda aunque falle el JavaScript; Livewire le agrega las sugerencias mientras se escribe (desde 2 letras). Busca por nombre, marca, SKU y código de fabricante, sin importar mayúsculas ni tildes, y cada palabra tiene que aparecer en alguno de esos campos (`2.5` se entiende como `2,5`). Sirve con las flechas, Enter y Escape.
 - **Filtros**: los conteos de cada grupo ignoran la selección de ese mismo grupo (marcando "Rojo" seguís viendo cuántos hay de los otros colores). El filtro de precio se escribe en pesos enteros (`1.500`). En el celular se abren en un panel a pantalla completa. Un atributo se ofrece como filtro cuando, dentro de la categoría o la búsqueda, tiene al menos dos valores distintos; los grupos no aparecen ni desaparecen mientras filtrás.
 - **Ofertas**: un producto está en oferta cuando `compare_at_price` (el precio anterior) es **mayor** que `list_price`; el porcentaje de descuento se calcula. Los clientes profesionales aprobados ven su precio profesional en lugar de la oferta.
-- **Ficha de producto**: galería, ficha técnica (marca, SKU, código y atributos), stock en la unidad del producto (`1.200 m`, `18 rollos`), productos relacionados y el botón **Consultar por WhatsApp**, que abre el chat con el producto, el SKU y el link ya escritos. El botón usa `SHOP_WHATSAPP` del `.env`; sin número, no se muestra. Hasta la Etapa 5 (carrito) es el botón principal.
+- **Ficha de producto**: galería, ficha técnica (marca, SKU, código y atributos), stock en la unidad del producto (`1.200 m`, `18 rollos`), productos relacionados y el botón **Consultar por WhatsApp**, que abre el chat con el producto, el SKU y el link ya escritos. El botón usa `SHOP_WHATSAPP` del `.env`; sin número, no se muestra. Con stock, el botón principal es **Agregar al carrito** y WhatsApp queda como secundario; sin stock, WhatsApp pasa a ser el principal.
 - **Fotos**: van en `storage/app/public` (por ejemplo `products/cable.jpg`) y se guarda esa ruta en `product_images.path` o `categories.image`; se sirven por el enlace `public/storage` (`php artisan storage:link`; en Windows puede pedir una consola de administrador). También se acepta una URL completa. Sin foto se muestra un ícono de reemplazo.
 - **Probarlo**: `php artisan migrate:fresh --seed` carga ~44 productos con atributos, 10 ofertas y fechas de alta escalonadas, y `npm run build` (o `npm run dev`) compila los estilos.
+
+## Carrito y checkout
+
+| URL | Qué es | Ruta |
+| --- | --- | --- |
+| `/carrito` | Carrito (Livewire): cantidades, quitar, subtotal | `cart.index` |
+| `/compra/entrega` | Paso 1: dirección de envío | `checkout.delivery` |
+| `/compra/pago` | Paso 2: forma de pago y comentarios | `checkout.payment` |
+| `/compra/confirmar` | Paso 3: revisar y confirmar (acá se pide Google) | `checkout.confirm` / `checkout.place` |
+| `/pedidos` | Mis pedidos | `orders.index` |
+| `/pedidos/{número}` | Detalle con seguimiento, datos de transferencia y "Repetir pedido" | `orders.show` / `orders.reorder` |
+
+- **Carrito**: el invitado tiene el suyo por sesión; al ingresar con Google se suma al de su cuenta. Se guardan solo productos y cantidades: los precios se calculan cada vez que se lee (con precio profesional si corresponde). Los cables van de a medio metro; unidades y rollos, enteros. No se puede pedir más que el stock.
+- **Checkout**: los pasos 1 y 2 se pueden hacer sin cuenta (quedan en la sesión). En "Confirmar" se ingresa con Google y se vuelve a la confirmación con el carrito intacto. Si falta el teléfono, se pide antes.
+- **Envíos**: Elenor es solo virtual, así que no hay retiro en local (`SHOP_PICKUP_ENABLED=false`). Se envía a las provincias del NOA; el costo sale de `SHOP_SHIPPING_COST_TUCUMAN` y `SHOP_SHIPPING_COST_NOA`. Si está vacío, el envío queda **a coordinar**: el pedido se guarda sin ese costo y se avisa al cliente después.
+- **Pago**: por ahora solo transferencia (datos en `SHOP_BANK_*`, se muestran en el pedido y en el email). Mercado Pago está previsto pero no se ofrece.
+- **Pedido**: se arma en una transacción con las filas de los productos bloqueadas; los precios se congelan en `order_items`, se descuenta el stock, se guarda el estado "Recibido" en el historial, la dirección queda en la cuenta y se encola el email. Número: `EL-000123`.
 
 ## Modelo de datos
 
@@ -276,7 +296,7 @@ Lo que conviene saber:
 - [x] **2. Modelo de datos**: usuarios, categorías, productos, carritos, pedidos y seeders
 - [x] **3. Login con Google**: Socialite, usuarios, carrito de invitado y teléfono
 - [x] **4. Catálogo**: inicio, listados con filtros, buscador con sugerencias y ficha de producto
-- [ ] 5. Carrito y checkout
+- [x] **5. Carrito y checkout**: carrito persistente, checkout en 3 pasos, pedidos, email y "Mis pedidos"
 - [ ] 6. Panel administrativo e importación de precios
 
 Las reglas y convenciones del proyecto están en [CLAUDE.md](CLAUDE.md).

@@ -4,8 +4,11 @@ use App\Http\Controllers\Account\AccountController;
 use App\Http\Controllers\Account\PhoneController;
 use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\Auth\LogoutController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
+use App\Livewire\Cart\CartPage;
 use App\Livewire\Catalog\ProductList;
 use Illuminate\Support\Facades\Route;
 
@@ -31,8 +34,33 @@ Route::get('/producto/{product}', [ProductController::class, 'show'])->name('pro
 
 Route::view('/presupuestos', 'coming-soon', ['title' => 'Presupuestos'])->name('quotes.index');
 Route::view('/favoritos', 'coming-soon', ['title' => 'Favoritos'])->name('favorites.index');
-Route::view('/carrito', 'coming-soon', ['title' => 'Carrito'])->name('cart.index');
-Route::view('/pedidos', 'coming-soon', ['title' => 'Mis pedidos'])->name('orders.index');
+
+/*
+| Cart and checkout. Guests can build a cart and go through the first two
+| checkout steps; Google is asked for only to confirm the order.
+*/
+
+Route::get('/carrito', CartPage::class)->name('cart.index');
+
+Route::prefix('compra')->name('checkout.')->controller(CheckoutController::class)->group(function () {
+    Route::get('/', 'start')->name('start');
+    Route::get('entrega', 'delivery')->name('delivery');
+    Route::post('entrega', 'storeDelivery')->name('delivery.store');
+    Route::get('pago', 'payment')->name('payment');
+    Route::post('pago', 'storePayment')->name('payment.store');
+    Route::get('confirmar', 'confirm')->name('confirm');
+    Route::post('confirmar', 'place')->middleware(['auth', 'phone', 'throttle:10,1'])->name('place');
+});
+
+/*
+| "Mis pedidos". Orders are found by their number (EL-000123).
+*/
+
+Route::middleware('auth')->prefix('pedidos')->name('orders.')->controller(OrderController::class)->group(function () {
+    Route::get('/', 'index')->name('index');
+    Route::get('{order:number}', 'show')->name('show');
+    Route::post('{order:number}/repetir', 'reorder')->middleware('throttle:20,1')->name('reorder');
+});
 
 /*
 | Sign in with Google is the only way in. The auth routes are for visitors

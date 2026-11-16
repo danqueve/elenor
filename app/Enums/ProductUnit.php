@@ -44,4 +44,41 @@ enum ProductUnit: string
             self::Roll => ' / rollo',
         };
     }
+
+    /**
+     * The smallest amount that can be bought, and the steps the quantity
+     * moves in: cable by the metre can be cut at half metres; units and rolls
+     * are whole.
+     */
+    public function step(): string
+    {
+        return match ($this) {
+            self::Meter => '0.50',
+            self::Unit, self::Roll => '1.00',
+        };
+    }
+
+    /**
+     * Whether a quantity ("2.50") is positive and a multiple of the step.
+     */
+    public function accepts(string $quantity): bool
+    {
+        if (bccomp($quantity, '0', 2) <= 0) {
+            return false;
+        }
+
+        return bccomp(bcmod($quantity, $this->step(), 2), '0', 2) === 0;
+    }
+
+    /**
+     * What to tell the customer when a quantity is not accepted.
+     */
+    public function stepHint(): string
+    {
+        return match ($this) {
+            self::Meter => 'Los cables se venden por metro, de a medio metro (por ejemplo 2 o 2,5).',
+            self::Unit => 'Se vende por unidad: ingresá un número entero.',
+            self::Roll => 'Se vende por rollo: ingresá un número entero.',
+        };
+    }
 }

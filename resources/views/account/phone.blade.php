@@ -3,7 +3,7 @@
         <h1 class="text-2xl font-bold lg:text-3xl">Tu teléfono</h1>
 
         <p class="mt-3 text-brand-industrial">
-            Lo usamos solo para coordinar la entrega o el retiro de tus pedidos. Ingresalo con código de área.
+            Lo usamos solo para coordinar la entrega de tus pedidos. Ingresalo con código de área.
         </p>
 
         <form method="POST" action="{{ route('account.phone.update') }}" class="mt-6 space-y-6 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-brand-industrial/10">

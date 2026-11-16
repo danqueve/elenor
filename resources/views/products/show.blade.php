@@ -105,14 +105,19 @@
                     @endif
                 </p>
 
-                @if ($whatsapp)
-                    <div class="mt-6">
-                        <x-button :href="$whatsapp" target="_blank" rel="noopener" class="w-full sm:w-auto">
+                {{-- One primary button: "Agregar al carrito" with stock; WhatsApp otherwise. --}}
+                <div class="mt-6 space-y-4">
+                    @if ($inStock)
+                        <livewire:cart.add-to-cart :product="$product" />
+                    @endif
+
+                    @if ($whatsapp)
+                        <x-button :href="$whatsapp" target="_blank" rel="noopener" :variant="$inStock ? 'secondary' : 'primary'" class="w-full sm:w-auto">
                             <x-heroicon-o-chat-bubble-left-right class="size-5" aria-hidden="true" />
                             Consultar por WhatsApp
                         </x-button>
-                    </div>
-                @endif
+                    @endif
+                </div>
 
                 @if (filled($product->description))
                     <section class="mt-8" aria-labelledby="descripcion">
